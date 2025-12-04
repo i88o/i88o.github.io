@@ -1,0 +1,57 @@
+# .github/workflows/deploy.yml
+name: Deploy PhotoSwipe Demo to GitHub Pages
+
+on:
+  push:
+    分支: ["main"]  # 或你的默认分支
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ 拉取代码
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ 安装 Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      # 3️⃣ 安装依赖并构建 demo 网站
+      - name: Build demo-docs-website
+        run: |
+          cd demo-docs-website
+          npm install
+          npm run build
+
+      # 4️⃣ 配置 GitHub Pages
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      # 5️⃣ 上传构建产物
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # 假设 build 后静态文件在 demo-docs-website/dist
+          path: demo-docs-website/dist
+
+      # 6️⃣ 部署到 GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
