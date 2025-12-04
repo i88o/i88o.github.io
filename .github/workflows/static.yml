@@ -1,9 +1,9 @@
 # .github/workflows/deploy-demo-docs.yml
 name: Deploy PhotoSwipe v6 demo-docs-website to GitHub Pages
 
-于:
+on:
   push:
-    分支: ["main"] # 或你的默认分支
+    branches: ["main"] # 或你的默认分支
   workflow_dispatch:
 
 permissions:
