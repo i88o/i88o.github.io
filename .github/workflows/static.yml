@@ -3,7 +3,7 @@ name: Deploy PhotoSwipe v6 demo-docs-website to GitHub Pages
 
 on:
   push:
-    branches: ["main"] # 或你的默认分支
+    branches: ["main"]   # Replace with your default branch if not 'main'
   workflow_dispatch:
 
 permissions:
@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout 仓库
+      # 1️⃣ Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -33,14 +33,14 @@ jobs:
         with:
           node-version: 20
 
-      # 3️⃣ 安装依赖并构建 demo-docs-website
+      # 3️⃣ Install dependencies and build demo-docs-website
       - name: Build demo-docs-website
         run: |
           cd demo-docs-website
           npm install
           npm run build
 
-      # 4️⃣ 验证构建目录是否存在
+      # 4️⃣ Verify build directory exists
       - name: Verify build directory
         run: |
           BUILD_DIR="demo-docs-website/build"
@@ -51,17 +51,17 @@ jobs:
           echo "Build directory exists. Contents:"
           ls -R "$BUILD_DIR"
 
-      # 5️⃣ 配置 GitHub Pages
+      # 5️⃣ Setup GitHub Pages
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      # 6️⃣ 上传构建产物
+      # 6️⃣ Upload build artifact
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: demo-docs-website/build
 
-      # 7️⃣ 部署到 GitHub Pages
+      # 7️⃣ Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
