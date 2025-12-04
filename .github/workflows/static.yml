@@ -1,5 +1,5 @@
-# .github/workflows/deploy.yml
-name: Deploy PhotoSwipe Demo to GitHub Pages
+# .github/workflows/deploy-demo.yml
+name: Deploy PhotoSwipe v6 Demo to GitHub Pages
 
 on:
   push:
@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ 拉取代码
+      # 1️⃣ Checkout 仓库
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -40,18 +40,28 @@ jobs:
           npm install
           npm run build
 
-      # 4️⃣ 配置 GitHub Pages
+      # 4️⃣ 检查构建目录是否存在
+      - name: Verify build directory
+        run: |
+          BUILD_DIR="demo-docs-website/dist"
+          if [ ! -d "$BUILD_DIR" ]; then
+            echo "Error: build directory $BUILD_DIR does not exist."
+            exit 1
+          fi
+          echo "Build directory exists, contents:"
+          ls -R "$BUILD_DIR"
+
+      # 5️⃣ 配置 GitHub Pages
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      # 5️⃣ 上传构建产物
+      # 6️⃣ 上传构建产物
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # 假设 build 后静态文件在 demo-docs-website/dist
           path: demo-docs-website/dist
 
-      # 6️⃣ 部署到 GitHub Pages
+      # 7️⃣ 部署到 GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
